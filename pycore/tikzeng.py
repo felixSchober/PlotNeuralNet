@@ -20,6 +20,7 @@ def to_cor():
 \def\FcColor{rgb:blue,5;red,2.5;white,5}
 \def\FcReluColor{rgb:blue,5;red,5;white,4}
 \def\SoftmaxColor{rgb:magenta,5;black,7}   
+\def\SumColor{rgb:blue,5;green,15}
 """
 
 def to_begin():
@@ -164,6 +165,19 @@ def to_SoftMax( name, s_filer=10, offset="(0,0,0)", to="(0,0,0)", width=1.5, hei
     };
 """
 
+def to_ball(name, offset="(0,0,0)", to="(0,0,0)", opacity=0.6, radius=2.5, logo='+'):
+	return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Ball={
+        name=""" + name +""",
+        fill=\SumColor,
+        opacity="""+ str(opacity) +""",
+        radius=""" + str(radius) + """,
+        logo=$"""+ logo + """$
+        }
+    };
+"""
+
 
 def to_connection( of, to):
     return r"""
@@ -179,6 +193,16 @@ def to_skip( of, to, pos=1.25):
 -- node {\copymidarrow}("""+to+"""-top)
 -- node {\copymidarrow} ("""+to+"""-north);
 """
+
+def to_intermediate_connection(of, to, points_between=[], of_direction='east', to_direction='west'):
+	result = f'\draw [connection] ({of}-{of_direction}) '
+
+	for p, l in points_between:
+		result += '-- node{' + l + '} ' + p + ' '
+
+	result += '-- node{\midarrow} (' + to + '-' + to_direction + ');'
+	return result
+
 
 def to_end():
     return r"""
