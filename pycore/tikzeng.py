@@ -13,8 +13,9 @@ def to_head( projectpath ):
 
 def to_cor():
     return r"""
-\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
-\def\ConvReluColor{rgb:yellow,5;red,5;white,5}
+\def\GreenColor{rgb:red,2;green,176;blue,81}
+\def\BlueColor{rgb:red,2;green,112;blue,192}
+\def\ConvReluColor{rgb:red,0;green,69;blue,119}
 \def\PoolColor{rgb:red,1;black,0.3}
 \def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
 \def\FcColor{rgb:blue,5;red,2.5;white,5}
@@ -41,21 +42,30 @@ def to_input( pathfile, to='(-3,0,0)', width=8, height=8, name="temp" ):
 """
 
 # Conv
-def to_Conv( name, s_filer=256, n_filer=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
-    return r"""
-\pic[shift={"""+ offset +"""}] at """+ to +""" 
-    {Box={
-        name=""" + name +""",
-        caption="""+ caption +r""",
-        xlabel={{"""+ str(n_filer) +""", }},
-        zlabel="""+ str(s_filer) +""",
-        fill=\ConvColor,
-        height="""+ str(height) +""",
-        width="""+ str(width) +""",
-        depth="""+ str(depth) +"""
-        }
-    };
-"""
+def to_Conv( name, x_label=None, y_label=None, z_label=None, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" ", fillColor='\BlueColor' ):
+
+	result = '\pic[shift={' + offset + '}] at ' + to + ' {Box={ '
+	result += f'name={name},\n 			\
+				caption={caption},\n		\
+				fill={fillColor},\n		\
+				height={height},\n		\
+				width={width},	\n		\
+				depth={depth}'			
+
+	if x_label is not None:
+		result += f',\n					\
+		xlabel={x_label}'
+
+	if y_label is not None:
+		result += f',	\n				\
+		ylabel={y_label}'
+
+	if z_label is not None:
+		result += f',\n					\
+		zlabel={z_label}'
+
+	result += '} \n};'
+	return result
 
 # Conv,Conv,relu
 # Bottleneck
@@ -67,7 +77,7 @@ def to_ConvConvRelu( name, s_filer=256, n_filer=(64,64), offset="(0,0,0)", to="(
         caption="""+ caption +""",
         xlabel={{ """+ str(n_filer[0]) +""", """+ str(n_filer[1]) +""" }},
         zlabel="""+ str(s_filer) +""",
-        fill=\ConvColor,
+        fill=\BlueColor,
         bandfill=\ConvReluColor,
         height="""+ str(height) +""",
         width={ """+ str(width[0]) +""" , """+ str(width[1]) +""" },
@@ -148,14 +158,14 @@ def to_ConvSoftMax( name, s_filer=40, offset="(0,0,0)", to="(0,0,0)", width=1, h
 """
 
 # SoftMax
-def to_SoftMax( name, s_filer=10, offset="(0,0,0)", to="(0,0,0)", width=1.5, height=3, depth=25, opacity=0.8, caption=" " ):
+def to_SoftMax( name, z_label=10, offset="(0,0,0)", to="(0,0,0)", width=1.5, height=3, depth=25, opacity=0.8, caption=" " ):
     return r"""
 \pic[shift={"""+ offset +"""}] at """+ to +""" 
     {Box={
         name=""" + name +""",
         caption="""+ caption +""",
         xlabel={{" ","dummy"}},
-        zlabel="""+ str(s_filer) +""",
+        zlabel="""+ str(z_label) +""",
         fill=\SoftmaxColor,
         opacity="""+ str(opacity) +""",
         height="""+ str(height) +""",
