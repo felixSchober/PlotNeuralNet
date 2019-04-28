@@ -43,6 +43,15 @@ def block_Unconv( name, botton, top, s_filer=256, n_filer=64, offset="(1,0,0)", 
     ]
 
 
+def attention_head (name, head_i, offset='(0,0,0)', size=[32, 32, 32], opacity=0.5):
+
+	result = [
+		to_Conv(name=name + '_e', offset=offset, y_label=300, z_label=300, width=2, height=24, depth=24, caption=f'Attention Head {head_i}', fillColor='\GreenColor'),
+		to_Conv(name=name + '_m', offset='(0.4,0,0)', to=f'({name}_e-west)', width=2, height=24, depth=24, fillColor='\GreenColor'),
+		to_Conv(name=name + '_s', offset='(0.4,0,0)', to=f'({name}_m-west)', width=2, height=24, depth=24, fillColor='\GreenColor')
+	]
+	return result
+
 
 
 def block_Res( num, name, botton, top, s_filer=256, n_filer=64, offset="(0,0,0)", size=(32,32,3.5), opacity=0.5 ):
