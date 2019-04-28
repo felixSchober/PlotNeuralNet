@@ -1,0 +1,233 @@
+
+\documentclass[border=8pt, multi, tikz]{standalone} 
+\usepackage{import}
+\subimport{../layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d} %for including external image 
+
+\def\GreenColor{rgb:red,2;green,176;blue,81}
+\def\BlueColor{rgb:red,2;green,112;blue,192}
+\def\ConvReluColor{rgb:red,0;green,69;blue,119}
+\def\PoolColor{rgb:red,1;black,0.3}
+\def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
+\def\FcColor{rgb:blue,5;red,2.5;white,5}
+\def\FcReluColor{rgb:blue,5;red,5;white,4}
+\def\SoftmaxColor{rgb:magenta,5;black,7}   
+\def\SumColor{rgb:blue,5;green,15}
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+
+\node[canvas is zy plane at x=0] (temp) at (-4, 0, 8) {\includegraphics[width=8cm,height=8cm]{input.png}};
+\pic[shift={(0,0,10)}] at (0,0,0) {Box={ name=embedding,
+ 							caption=Embedding,
+						fill=\GreenColor,
+						height=30,
+						width=2,	
+						depth=60,
+							xlabel=8000,
+							zlabel=300} 
+};\pic[shift={(4,0,0)}] at (0,0,0) {Box={ name=ath1_e,
+ 							caption=Attention Head 1,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24,	
+						ylabel=300,
+							zlabel=300} 
+};\pic[shift={(0.4,0,0)}] at (ath1_e-west) {Box={ name=ath1_m,
+ 							caption= ,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24} 
+};\pic[shift={(0.4,0,0)}] at (ath1_m-west) {Box={ name=ath1_s,
+ 							caption= ,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24} 
+};\pic[shift={(4,0,10)}] at (0,0,0) {Box={ name=ath2_e,
+ 							caption=Attention Head 2,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24,	
+						ylabel=300,
+							zlabel=300} 
+};\pic[shift={(0.4,0,0)}] at (ath2_e-west) {Box={ name=ath2_m,
+ 							caption= ,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24} 
+};\pic[shift={(0.4,0,0)}] at (ath2_m-west) {Box={ name=ath2_s,
+ 							caption= ,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24} 
+};\pic[shift={(4,0,20)}] at (0,0,0) {Box={ name=ath3_e,
+ 							caption=Attention Head 3,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24,	
+						ylabel=300,
+							zlabel=300} 
+};\pic[shift={(0.4,0,0)}] at (ath3_e-west) {Box={ name=ath3_m,
+ 							caption= ,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24} 
+};\pic[shift={(0.4,0,0)}] at (ath3_m-west) {Box={ name=ath3_s,
+ 							caption= ,
+						fill=\GreenColor,
+						height=24,
+						width=2,	
+						depth=24} 
+};\draw [connection] (embedding-east) -- node{} (2,0,10) -- node{} (2,0,0) -- node{\midarrow} (ath1_s-west);
+\draw [connection]  (embedding-east)    -- node {\midarrow} (ath2_s-west);
+\draw [connection] (embedding-east) -- node{} (2,0,10) -- node{} (2,0,20) -- node{\midarrow} (ath3_s-west);
+\pic[shift={(9, 0, 10)}] at (0,0,0) 
+    {Ball={
+        name=concat1,
+        fill=\SumColor,
+        opacity=0.6,
+        radius=2.5,
+        logo=$+$
+        }
+    };
+
+\draw [connection]  (ath2_e-east)    -- node {\midarrow} (concat1-west);
+\draw [connection] (ath1_e-east) -- node{\midarrow} (8,0,0) -- node{} (8,0,10) -- node{\midarrow} (concat1-west);\draw [connection] (ath3_e-east) -- node{} (8,0,20) -- node{\midarrow} (8,0,10) -- node{\midarrow} (concat1-west);
+\pic[shift={ (10.3,0,10) }] at (0,0,0) 
+    {Box={
+        name=drp1,
+        caption=Dropout,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=24,
+        width=1,
+        depth=24
+        }
+    };
+
+\draw [connection]  (concat1-east)    -- node {\midarrow} (drp1-west);
+
+\pic[shift={(12, 0, 10)}] at (0,0,0) 
+    {Ball={
+        name=concat2,
+        fill=\SumColor,
+        opacity=0.6,
+        radius=2.5,
+        logo=$+$
+        }
+    };
+
+\draw [connection]  (drp1-east)    -- node {\midarrow} (concat2-west);
+\draw [connection] (embedding-north) -- node{\midarrow} (0.15,8,10) -- node{\midarrow} (12,8,10) -- node{\midarrow} (concat2-north);
+\pic[shift={ (14,0,10) }] at (0,0,0) 
+    {RightBandedBox={
+        name=layerNorm,
+        caption=Layer Norm,
+        xlabel={{ , }},
+        zlabel=,
+        fill={rgb:white,1;black,3},
+        bandfill={rgb:white,1;black,2},
+        opacity=0.2,
+        height=24,
+        width=2,
+        depth=24
+        }
+    };
+
+\draw [connection]  (concat2-east)    -- node {\midarrow} (layerNorm-west);
+
+\pic[shift={ (17,0,10) }] at (0,0,0) 
+    {RightBandedBox={
+        name=pwfw,
+        caption=PW Feed Forward,
+        xlabel={{ 300, 300 }},
+        zlabel=300,
+        fill=\BlueColor,
+        bandfill=\ConvReluColor,
+        height=24,
+        width={ 4 , 4 },
+        depth=24
+        }
+    };
+
+\draw [connection]  (layerNorm-east)    -- node {\midarrow} (pwfw-west);
+
+\pic[shift={ (19,0,10) }] at (0,0,0) 
+    {Box={
+        name=drp2,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=24,
+        width=1,
+        depth=24
+        }
+    };
+
+\pic[shift={(21.5, 0, 10)}] at (0,0,0) 
+    {Ball={
+        name=concat3,
+        fill=\SumColor,
+        opacity=0.6,
+        radius=2.5,
+        logo=$+$
+        }
+    };
+
+\draw [connection]  (drp2-east)    -- node {\midarrow} (concat3-west);
+\draw [connection] (layerNorm-east) -- node{} (15.5,0,10) -- node{} (15.5,8,10) -- node{\midarrow} (21.5,8,10) -- node{\midarrow} (concat3-north);\pic[shift={(25,0,5)}] at (0,0,0) {Box={ name=asp1,
+ 							caption=Aspect Price,
+						fill=\BlueColor,
+						height=24,
+						width=3,	
+						depth=24} 
+};\pic[shift={(25,0,15)}] at (0,0,0) {Box={ name=asp2,
+ 							caption=Aspect Quality,
+						fill=\BlueColor,
+						height=24,
+						width=3,	
+						depth=24} 
+};
+\pic[shift={(25.7,0,5)}] at (0,0,0) 
+    {Box={
+        name=sm1,
+        caption= ,
+        xlabel={{" ","dummy"}},
+        zlabel=4,
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=3,
+        width=1,
+        depth=24
+        }
+    };
+
+\pic[shift={(25.7,0,15)}] at (0,0,0) 
+    {Box={
+        name=sm2,
+        caption= ,
+        xlabel={{" ","dummy"}},
+        zlabel=4,
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=3,
+        width=1,
+        depth=24
+        }
+    };
+\draw [connection] (concat3-east) -- node{} (23.5,0,10) -- node{} (23.5,0,5) -- node{\midarrow} (asp1-west);\draw [connection] (concat3-east) -- node{} (23.5,0,10) -- node{} (23.5,0,15) -- node{\midarrow} (asp2-west);
+\end{tikzpicture}
+\end{document}
