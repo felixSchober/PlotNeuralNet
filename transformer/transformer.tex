@@ -30,71 +30,119 @@
 						height=30,
 						width=2,	
 						depth=60,
-							xlabel=8000,
-							zlabel=300} 
-};\pic[shift={(4,0,0)}] at (0,0,0) {Box={ name=ath1_e,
+						zlabel=$d_{ff}$} 
+};
+\pic[shift={(4,0,0)}] at (0,0,0) {Box={ name=ath1_e,
  							caption=Attention Head 1,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24,	
-						ylabel=300,
-							zlabel=300} 
-};\pic[shift={(0.4,0,0)}] at (ath1_e-west) {Box={ name=ath1_m,
+						ylabel=$d_{ff}$} 
+};
+\pic[shift={(0.4,0,0)}] at (ath1_e-west) {Box={ name=ath1_m,
  							caption= ,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24} 
-};\pic[shift={(0.4,0,0)}] at (ath1_m-west) {Box={ name=ath1_s,
+};
+\pic[shift={(0.4,0,0)}] at (ath1_m-west) 
+{Box={ name=ath1_s,
  							caption= ,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24} 
-};\pic[shift={(4,0,10)}] at (0,0,0) {Box={ name=ath2_e,
+};
+\pic[shift={(0.4,0,0)}] at (ath1_m-east)
+    {Box={
+        name=sm_ath1,
+        caption= ,
+        xlabel={{" ","dummy"}},
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=24,
+        width=1,
+        depth=24
+        }
+    };
+
+\pic[shift={(4,0,10)}] at (0,0,0) {Box={ name=ath2_e,
  							caption=Attention Head 2,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24,	
-						ylabel=300,
-							zlabel=300} 
-};\pic[shift={(0.4,0,0)}] at (ath2_e-west) {Box={ name=ath2_m,
+						ylabel=$d_{ff}$} 
+};
+\pic[shift={(0.4,0,0)}] at (ath2_e-west) {Box={ name=ath2_m,
  							caption= ,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24} 
-};\pic[shift={(0.4,0,0)}] at (ath2_m-west) {Box={ name=ath2_s,
+};
+\pic[shift={(0.4,0,0)}] at (ath2_m-west) {Box={ name=ath2_s,
  							caption= ,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24} 
-};\pic[shift={(4,0,20)}] at (0,0,0) {Box={ name=ath3_e,
+};
+
+\pic[shift={(0.4,0,0)}] at (ath2_m-east)
+    {Box={
+        name=sm_ath2,
+        caption= ,
+        xlabel={{" ","dummy"}},
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=24,
+        width=1,
+        depth=24
+        }
+    };
+
+\pic[shift={(4,0,20)}] at (0,0,0) {Box={ name=ath3_e,
  							caption=Attention Head 3,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24,	
-						ylabel=300,
-							zlabel=300} 
-};\pic[shift={(0.4,0,0)}] at (ath3_e-west) {Box={ name=ath3_m,
+						ylabel=$d_{ff}$} 
+};
+\pic[shift={(0.4,0,0)}] at (ath3_e-west) {Box={ name=ath3_m,
  							caption= ,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24} 
-};\pic[shift={(0.4,0,0)}] at (ath3_m-west) {Box={ name=ath3_s,
+};
+\pic[shift={(0.4,0,0)}] at (ath3_m-west) {Box={ name=ath3_s,
  							caption= ,
 						fill=\GreenColor,
 						height=24,
 						width=2,	
 						depth=24} 
-};\draw [connection] (embedding-east) -- node{} (2,0,10) -- node{} (2,0,0) -- node{\midarrow} (ath1_s-west);
-\draw [connection]  (embedding-east)    -- node {\midarrow} (ath2_s-west);
-\draw [connection] (embedding-east) -- node{} (2,0,10) -- node{} (2,0,20) -- node{\midarrow} (ath3_s-west);
+};
+
+\pic[shift={(0.4,0,0)}] at (ath3_m-east)
+    {Box={
+        name=sm_ath3,
+        caption= ,
+        xlabel={{" ","dummy"}},
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=24,
+        width=1,
+        depth=24
+        }
+    };
+
+\draw [connection] (embedding-east) -- node{} (2,0,10) -- node{} (2,0,0) -- node{\midarrow} (ath1_e-west);
+\draw [connection]  (embedding-east)    -- node {\midarrow} (ath2_e-west);
+\draw [connection] (embedding-east) -- node{} (2,0,10) -- node{} (2,0,20) -- node{\midarrow} (ath3_e-west);
 \pic[shift={(9, 0, 10)}] at (0,0,0) 
     {Ball={
         name=concat1,
@@ -105,8 +153,8 @@
         }
     };
 
-\draw [connection]  (ath2_e-east)    -- node {\midarrow} (concat1-west);
-\draw [connection] (ath1_e-east) -- node{\midarrow} (8,0,0) -- node{} (8,0,10) -- node{\midarrow} (concat1-west);\draw [connection] (ath3_e-east) -- node{} (8,0,20) -- node{\midarrow} (8,0,10) -- node{\midarrow} (concat1-west);
+\draw [connection]  (sm_ath2-east)    -- node {\midarrow} (concat1-west);
+\draw [connection] (sm_ath1-east) -- node{\midarrow} (8,0,0) -- node{} (8,0,10) -- node{\midarrow} (concat1-west);\draw [connection] (sm_ath3-east) -- node{} (8,0,20) -- node{\midarrow} (8,0,10) -- node{\midarrow} (concat1-west);
 \pic[shift={ (10.3,0,10) }] at (0,0,0) 
     {Box={
         name=drp1,
@@ -154,8 +202,8 @@
     {RightBandedBox={
         name=pwfw,
         caption=PW Feed Forward,
-        xlabel={{ 300, 300 }},
-        zlabel=300,
+        xlabel={{ ,  }},
+        zlabel=$d_{ff}$,
         fill=\BlueColor,
         bandfill=\ConvReluColor,
         height=24,
@@ -166,7 +214,7 @@
 
 \draw [connection]  (layerNorm-east)    -- node {\midarrow} (pwfw-west);
 
-\pic[shift={ (19,0,10) }] at (0,0,0) 
+\pic[shift={ (18.6,0,10) }] at (0,0,0) 
     {Box={
         name=drp2,
         caption= ,
@@ -203,7 +251,19 @@
 						width=3,	
 						depth=24} 
 };
-\pic[shift={(25.7,0,5)}] at (0,0,0) 
+
+\pic[shift={ (25.7,0,5) }] at (0,0,0) 
+    {Box={
+        name=sm_drp1,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=3,
+        width=1,
+        depth=24
+        }
+};
+\pic[shift={(25.9,0,5)}] at (0,0,0) 
     {Box={
         name=sm1,
         caption= ,
@@ -217,7 +277,18 @@
         }
     };
 
-\pic[shift={(25.7,0,15)}] at (0,0,0) 
+	\pic[shift={ (25.7,0,15) }] at (0,0,0) 
+    {Box={
+        name=sm_drp2,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=3,
+        width=1,
+        depth=24
+        }
+};
+\pic[shift={(25.9,0,15)}] at (0,0,0) 
     {Box={
         name=sm2,
         caption= ,
@@ -238,7 +309,19 @@
 					width=3,	
 					depth=24} 
 };
-\pic[shift={(25.7,0,25)}] at (0,0,0) 
+
+\pic[shift={ (25.7,0,25) }] at (0,0,0) 
+    {Box={
+        name=sm_drp3,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=3,
+        width=1,
+        depth=24
+        }
+};
+\pic[shift={(25.9,0,25)}] at (0,0,0) 
     {Box={
         name=sm3,
         caption= ,
@@ -258,7 +341,19 @@
 					width=3,	
 					depth=24} 
 };
-\pic[shift={(25.7,0,-5)}] at (0,0,0) 
+
+\pic[shift={ (25.7,0,-5) }] at (0,0,0) 
+    {Box={
+        name=sm_drp4,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=3,
+        width=1,
+        depth=24
+        }
+};
+\pic[shift={(25.9,0,-5)}] at (0,0,0) 
     {Box={
         name=sm4,
         caption= ,
@@ -270,7 +365,9 @@
         width=1,
         depth=24
         }
-    };
+	};
+	
+
 
 \draw [connection] (concat3-east) -- node{} (23.5,0,10) -- node{} (23.5,0,5) -- node{\midarrow} (asp1-west);
 \draw [connection] (concat3-east) -- node{} (23.5,0,10) -- node{} (23.5,0,15) -- node{\midarrow} (asp2-west);
